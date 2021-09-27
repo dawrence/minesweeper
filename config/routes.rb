@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
   devise_for :users
   root to: 'urls#index'
 
-  get ':url', to: 'urls#visit', as: :visit
-
   namespace :api do
     namespace :v1 do
-      resources :urls, only: %i[create show], param: :url
-      get 'latest', to: 'urls#latest'
-      get 'stats/:url', to: 'urls#stats'
+      resources :games, only: %i[index show create update]
     end
   end
 end
