@@ -9,7 +9,10 @@ class Game < ApplicationRecord
   validates :user_id, presence: true
 
   def create_board
-    self.board = Array.new(size).map { Array.new(size) }
+    new_board = Array.new(size).map { Array.new(size) }
+    number_of_mines.times do
+      new_board[rand(size-1)][rand(size-1)] = 'X'
+    end
   end
 end
 
