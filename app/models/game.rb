@@ -13,6 +13,7 @@ class Game < ApplicationRecord
     number_of_mines.times do
       new_board[rand(size-1)][rand(size-1)] = 'X'
     end
+    self.board = new_board
   end
 end
 

@@ -25,6 +25,7 @@ module Api
       def create
         create_params = safe_params
         create_params[:user_id] = current_user.id
+
         game = Game.create!(create_params)
 
         render json: game

@@ -51,7 +51,11 @@ RSpec.configure do |config|
         schemas: {
           not_found: {
             type: :object,
-            additionalProperties: false
+            additionalProperties: true
+          },
+          unauthorized: {
+            type: :object,
+            additionalProperties: true
           },
           errors: {
             type: :object,

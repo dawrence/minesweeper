@@ -5,11 +5,13 @@ require 'swagger_helper'
 describe 'Games' do
   path '/api/v1/games' do
     get 'Games' do
-      tags 'Game'
+      security [basic_auth: []]
       let(:user) { create(:user) }
+      let(:Authorization) { basic_auth(user) }
+
+      tags 'Game'
 
       before do
-        allow_any_instance_of(ApplicationController).to receive(:current_user) { user }
         create(:game, user_id: user.id)
       end
 
@@ -19,22 +21,21 @@ describe 'Games' do
         run_test!
       end
 
-      # response '401', 'unauthorized' do
-      #   schema '$ref': '#/components/schemas/errors'
+      response '401', 'unauthorized' do
+        schema '$ref': '#/components/schemas/unauthorized'
 
-      #   let(:Authorization) { basic_auth(user, 'ghjkl') }
+        let(:Authorization) { basic_auth(user, 'ghjkl') }
 
-      #   run_test!
-      # end
+        run_test!
+      end
     end
 
     post 'create Game' do
-      tags 'Game'
-      # security [basic_auth: []]
-
+      security [basic_auth: []]
       let(:user) { create(:user) }
+      let(:Authorization) { basic_auth(user) }
 
-      before { allow_any_instance_of(ApplicationController).to receive(:current_user) { user } }
+      tags 'Game'
 
       parameter name: :game, in: :body, schema: { '$ref': '#/components/schemas/game_create' }
 
@@ -51,51 +52,46 @@ describe 'Games' do
         run_test!
       end
 
-      # response '401', 'unauthorized' do
-      #   schema '$ref': '#/components/schemas/errors'
+      response '401', 'unauthorized' do
+        schema '$ref': '#/components/schemas/unauthorized'
 
-      #   let(:Authorization) { basic_auth(user, 'ghjkl') }
+        let(:Authorization) { basic_auth(user, 'ghjkl') }
 
-      #   run_test!
-      # end
+        run_test!
+      end
     end
   end
 
   path '/api/v1/games/{id}' do
     get 'Show Game' do
       tags 'Game'
-      # security [basic_auth: []]
-
+      security [basic_auth: []]
       let(:user) { create(:user) }
-      let(:game) { create(:game, user_id: user.id) }
+      let(:Authorization) { basic_auth(user) }
+
+      let(:game_object) { create(:game, user_id: user.id) }
 
       parameter name: :id, in: :path, type: :string,
                 required: true, example: 'game-id', description: 'Game id'
 
       response '200', 'found' do
         schema '$ref': '#/components/schemas/game'
-        let!(:id) { game.id }
+
+        let(:id) { game_object.id }
+
         run_test!
       end
-
-      # response '401', 'unauthorized' do
-      #   schema '$ref': '#/components/schemas/errors'
-
-      #   let(:Authorization) { basic_auth(user, 'ghjkl') }
-
-      #   run_test!
-      # end
     end
+  end
 
+  path '/api/v1/games/{id}' do
     put 'update Game' do
       tags 'Game'
-
+      security [basic_auth: []]
       let(:user) { create(:user) }
-      let(:game_object) { create(:game, user_id: user.id) }
+      let(:Authorization) { basic_auth(user) }
 
-      before do
-        allow_any_instance_of(ApplicationController).to receive(:current_user) { user }
-      end
+      let(:game_object) { create(:game, user_id: user.id) }
 
       parameter name: :game, in: :body, schema: { '$ref': '#/components/schemas/game_update' }
       parameter name: :id, in: :path, type: :string,
@@ -120,13 +116,13 @@ describe 'Games' do
         run_test!
       end
 
-      # response '401', 'unauthorized' do
-      #   schema '$ref': '#/components/schemas/errors'
+      response '401', 'unauthorized' do
+        schema '$ref': '#/components/schemas/unauthorized'
 
-      #   let(:Authorization) { basic_auth(user, 'ghjkl') }
+        let(:Authorization) { basic_auth(user, 'ghjkl') }
 
-      #   run_test!
-      # end
+        run_test!
+      end
     end
   end
 end
